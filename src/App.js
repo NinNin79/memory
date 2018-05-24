@@ -1,16 +1,18 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 
 import Card from './Card'
 import GuessCount from './GuessCount'
+import Won from './Won'
 
 
 const Greeter = ({ whom }) => (
-  <button onClick={() => console.log(`Bonjour ${whom} !`)}>
-    Vas-y, clique !
+  <button onClick={() => console.log(`Bonjour ${whom} !`)}>
+    Vas-y, clique !
   </button>
 )
+
+
 
 class App extends Component {
   render() {
@@ -24,9 +26,15 @@ class App extends Component {
         <Card card="🎩" feedback="visible" onClick={this.handleCardClick} />
         <Card card="🐶" feedback="hidden" onClick={this.handleCardClick} />
         <Card card="🐱" feedback="justMatched" onClick={this.handleCardClick} />
+        <Won isWon= {new Date().getSeconds() % 2 === 0} />
       </div>
+
+      
     )
   }
+  
+
+
 }
 
-export default App;
+export default App
