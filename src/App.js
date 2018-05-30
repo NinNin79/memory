@@ -10,6 +10,7 @@ import Greeter from './Greeter'
 
 const SIDE = 6
 const SYMBOLS = '😀🎉💖🎩🐶🐱🦄🐬🌍🌛🌞💫🍎🍌🍓🍐🍟🍿'
+const VISUAL_PAUSE_MSECS = 750
 
 
 class App extends Component {
@@ -33,7 +34,43 @@ class App extends Component {
     return shuffle(result)
   }
 
+  //1ere place
+  handleCardClick = index => {
+    const {currentPair} = this.state
+    console.log(" dans le handleCardClick" + currentPair + " fin" )
+    if(currentPair.length === 2) {
+      console.log("currentPair.lenght = 2")
+      return
+    }
+    if(currentPair.length === 0) {
+      console.log("currentPair.lenght = 2")
+      this.setState({currentPair : [index]})
+      //console.log("dans currentPair = 0")
+      return 
+    }
+    this.handleNewPairClosedBy(index)
+  }
+  //2e place
+  handleNewPairClosedBy(index) {
+    //console.log(" dans le handleNewPairClosedBy")
+    const { cards, currentPair, guesses, matchedCardIndices } = this.state
+
+    const newPair = [currentPair[0], index]
+    console.log("2e :" + newPair)
+    const newGuesses = guesses + 1
+    const matched = cards[newPair[0]] === cards[newPair[1]]
+    this.setState({ currentPair: newPair, guesses: newGuesses })
+    if (matched) {
+      //console.log("matched")
+      this.setState({ matchedCardIndices: [...matchedCardIndices, ...newPair] })
+    }
+    
+    setTimeout(() => this.setState({ currentPair: [] }), VISUAL_PAUSE_MSECS)
+  }
+
+  //3e place
   getFeedbackForCard(index) {
+    //console.log("dans le getFeedBackForCard")
     const { currentPair, matchedCardIndices } = this.state
     const indexMatched = matchedCardIndices.includes(index)
   
@@ -48,25 +85,13 @@ class App extends Component {
     return indexMatched ? 'visible' : 'hidden'
   }
 
-  handleCardClick = index => {
-    const {currentPair} = this.state
-    if(currentPair === 2) {
-      return
-    }
-    if(currentPair === 0) {
-      this.setState({currentPair : [index]})
-      return 
-    }
-    this.handleNewPairClosedBy(index)
-  }
-
   render() {
     const {cards, guesses, matchedCardIndices} = this.state
     const won = matchedCardIndices.length === cards.length
     return (
       <div className="memory">
         <Greeter whom="Roberto" />
-        <GuessCount guesses={0} />
+        <GuessCount guesses={guesses} />
         {cards.map((card, index) => (
           <Card
             card={card}
